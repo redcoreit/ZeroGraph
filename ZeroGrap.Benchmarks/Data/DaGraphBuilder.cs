@@ -68,7 +68,7 @@ namespace ZeroGrap.Benchmarks.Data
 
             if (depth < _minDepth)
             {
-                throw new InvalidOperationException($"Min depth not reached. Depth: {depth} Budget: {budget}");
+                throw new InvalidOperationException($"Min depth not reached. Depth: {depth.ToString()} Budget: {budget.ToString()}");
             }
 
             graphs.Reverse();
@@ -81,7 +81,7 @@ namespace ZeroGrap.Benchmarks.Data
         {
             if (depth < _minDepth && budget == 0)
             {
-                throw new InvalidOperationException($"Min depth not reached but budget is exceeded. Depth: {depth}");
+                throw new InvalidOperationException($"Min depth not reached but budget is exceeded. Depth: {depth.ToString()}");
             }
 
             if (budget == 0)
@@ -95,7 +95,7 @@ namespace ZeroGrap.Benchmarks.Data
 
             if (localBudget == 0)
             {
-                throw new InvalidOperationException($"Min depth not reached but local budget is 0. Depth: {depth}");
+                throw new InvalidOperationException($"Min depth not reached but local budget is 0. Depth: {depth.ToString()}");
             }
 
             budget -= usage;

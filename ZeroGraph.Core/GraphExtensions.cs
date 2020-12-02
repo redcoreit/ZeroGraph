@@ -8,13 +8,15 @@ namespace ZeroGraph.Core
 {
     public static partial class GraphExtensions
     {
+        private static readonly Action<ICollection<int>, int> _collector = static (collection, m) => collection.Add(m);
+
         public static ValueGraph<TEdge> ToValueGraph<TEdge>(this ReadOnlyMemory<TEdge> edges, bool invert = false)
             where TEdge : IEdge
             => new ValueGraph<TEdge>(in edges, invert);
 
         public static void DepthFirstTraversal<TEdge>(this in ValueGraph<TEdge> graph, int startNode, ICollection<int> visited, bool reportStartNode = true)
             where TEdge : IEdge
-            => DepthFirstTraversal(in graph, startNode, visited, static (arg, m) => arg.Add(m), reportStartNode);
+            => DepthFirstTraversal(in graph, startNode, visited, _collector, reportStartNode);
 
         public static void DepthFirstTraversal<TEdge, TArg>(this in ValueGraph<TEdge> graph, int startNode, TArg arg, Action<TArg, int> visit, bool reportStartNode = true)
             where TEdge : IEdge

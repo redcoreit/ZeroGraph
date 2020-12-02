@@ -17,26 +17,26 @@ namespace ZeroGraph.Benchmarks.PerfTests
 {
     [RyuJitX64Job]
     [MemoryDiagnoser]
-    public class ValueGraphHandling
+    public class GraphSourceHandling
     {
-        private readonly ReadOnlyMemory<Edge> _source;
+        private readonly GraphSource<Edge> _source;
         private readonly int _startNode;
 
         private readonly HashSet<int> _result;
 
-        public ValueGraphHandling(bool writeToFile = true)
+        public GraphSourceHandling(bool writeToFile = true)
         {
             const int nodeCount = 400;
             const int minDepth = 5;
             const int maxOutgoingEdge = 3;
 
             var graph = DaGraphBuilder.Build(nodeCount, minDepth, maxOutgoingEdge);
-            _source = graph.Graph.ToArray();
+            _source = new GraphSource<Edge>(graph.Graph, true);
 
             _result = new(minDepth * 10);
 
             if (writeToFile)
-                graph.WriteDotFile("vgh-graph-debug.dot");
+                graph.WriteDotFile("gsh-graph-debug.dot");
 
             _startNode = graph.Roots.First();
 
@@ -45,18 +45,17 @@ namespace ZeroGraph.Benchmarks.PerfTests
         }
 
         [Benchmark]
-        public void ValueGraph_inverse_walk_hashset()
+        public void GraphSource_cached_direction_walk()
         {
-            using var graph = _source.ToValueGraph(true);
-            graph.DepthFirstTraversal(_startNode, _result);
+            using var graph = _source.Value;
+            graph.DepthFirstTraversal(_startNode, Array.Empty<int>(), static (arg, m) => { });
         }
 
         [Benchmark]
-        public void ValueGraph_inverse_walk_action()
+        public void GraphSource_inverted_direction_walk()
         {
-            var graph = _source.ToValueGraph(true);
+            using var graph = _source.GetInverted();
             graph.DepthFirstTraversal(_startNode, Array.Empty<int>(), static (arg, m) => { });
-            graph.Dispose();
         }
     }
 }

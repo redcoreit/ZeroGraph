@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿#pragma warning disable HAA0401
+
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -34,7 +36,7 @@ namespace ZeroGrap.Benchmarks.Data
 
             foreach (var edge in Graph)
             {
-                AppendLineAndIndent($"{edge.Referencer} -> {edge.Referenced}");
+                AppendLineAndIndent($"{edge.Referencer.ToString()} -> {edge.Referenced.ToString()}");
             }
 
             sb.AppendLine("}");
