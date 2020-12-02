@@ -6,17 +6,17 @@ using System.Threading.Tasks;
 
 namespace ZeroGraph.Core
 {
-    public static partial class GraphSourceExtensions
+    public static partial class GraphExtensions
     {
-        public static GraphSource<TEdge> ToGraphSource<TEdge>(this ReadOnlyMemory<TEdge> edges, bool invert = false)
+        public static ValueGraph<TEdge> ToValueGraph<TEdge>(this ReadOnlyMemory<TEdge> edges, bool invert = false)
             where TEdge : IEdge
-            => new GraphSource<TEdge>(in edges, invert);
+            => new ValueGraph<TEdge>(in edges, invert);
 
-        public static void DepthFirstTraversal<TEdge>(this in GraphSource<TEdge> graph, int startNode, ICollection<int> visited, bool reportStartNode = true)
+        public static void DepthFirstTraversal<TEdge>(this in ValueGraph<TEdge> graph, int startNode, ICollection<int> visited, bool reportStartNode = true)
             where TEdge : IEdge
             => DepthFirstTraversal(in graph, startNode, visited, static (arg, m) => arg.Add(m), reportStartNode);
 
-        public static void DepthFirstTraversal<TEdge, TArg>(this in GraphSource<TEdge> graph, int startNode, TArg arg, Action<TArg, int> visit, bool reportStartNode = true)
+        public static void DepthFirstTraversal<TEdge, TArg>(this in ValueGraph<TEdge> graph, int startNode, TArg arg, Action<TArg, int> visit, bool reportStartNode = true)
             where TEdge : IEdge
             where TArg : class
         {
@@ -44,7 +44,7 @@ namespace ZeroGraph.Core
             }
         }
 
-        private static ReadOnlySpan<TEdge> Locate<TEdge>(in GraphSource<TEdge> graph, int node)
+        private static ReadOnlySpan<TEdge> Locate<TEdge>(in ValueGraph<TEdge> graph, int node)
             where TEdge : IEdge
         {
             var edges = graph.GetEdgesSpan();

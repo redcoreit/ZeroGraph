@@ -4,13 +4,13 @@ using System.Collections.Generic;
 
 namespace ZeroGraph.Core
 {
-    public readonly ref struct GraphSource<TEdge>
+    public readonly ref struct ValueGraph<TEdge>
         where TEdge : IEdge
     {
         private readonly TEdge[] _rentedSource;
         private readonly int _length;
 
-        internal GraphSource(in ReadOnlyMemory<TEdge> edges, bool isInverted)
+        internal ValueGraph(in ReadOnlyMemory<TEdge> edges, bool isInverted)
         {
             Comparer = isInverted ? InlineableComparer<TEdge>.Inverted : InlineableComparer<TEdge>.Normal;
             _rentedSource = ArrayPool<TEdge>.Shared.Rent(edges.Length);
